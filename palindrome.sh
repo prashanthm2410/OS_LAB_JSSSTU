@@ -1,4 +1,3 @@
-****************************PALINDROME**********************************
 echo "Enter The Number : "
 read n
 temp=$n
