@@ -26,7 +26,7 @@ while(completed!=n)
 	{
 	if(p[i].bt>0 && p[i].at<=curtime)
 	{
-	if(p[i].bt<minbt ||(p[i].bt==minbt && p[i].at<=curtime))
+	if(p[i].bt<minbt ||(p[i].bt==minbt && p[i].at<p[minindex].at))
 	{
 	minindex=i;
 	minbt=p[i].bt;
