@@ -13,11 +13,11 @@ void sort(process p[],int n)
     {
         for(int j=0;j<n-i-1;j++)
         {
-            if(p[i].at>p[i+1].at)
+            if(p[j].at>p[j+1].at)
             {
-                temp=p[i];
-                p[i]=p[i+1];//swap the priocess itself not hjust there arrival times VVP
-                p[i+1]=temp;
+                temp=p[j];
+                p[j]=p[j+1];//swap the priocess itself not hjust there arrival times VVP
+                p[j+1]=temp;
             }
         }
     }
