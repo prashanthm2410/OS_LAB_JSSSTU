@@ -4,7 +4,6 @@
 #include <stdio.h>
 #define MaxItems 5
 #define BufferSize 5 
-
 sem_t empty;
 sem_t full;
 int in = 0;
