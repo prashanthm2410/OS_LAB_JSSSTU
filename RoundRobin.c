@@ -1,100 +1,118 @@
 #include<stdio.h>
 #include<stdlib.h>
 
-typedef struct process {
-    int Id, AT, BT, CT, TAT, WT, flag; 
-} pro;
+struct process
+{
+    int pid, at, bt, ct, wt, tat, completed, btr, visited;
+};
 
-pro p[15];
+typedef struct process process;
 
-void swap(pro *a, pro *b) {
-    pro temp = *a;
-    *a = *b;
-    *b = temp;
-    return; 
-}
-
-void sort(int n) {
-    for(int i = 0; i<n-1; i++) {
-        for(int j=0; j<n-i-1; j++) {
-            if(p[j].AT > p[j+1].AT) {
-                swap(&p[j], &p[j+1]);
+void sort(process *p, int n)
+{
+    process temp;
+    for (int i = 0; i < n - 1; i++)
+    {
+        for (int j = 0; j < n - i - 1; j++)
+        {
+            if (p[j].at > p[j + 1].at)
+            {
+                temp = p[j];
+                p[j] = p[j + 1];
+                p[j + 1] = temp;
             }
         }
     }
 }
 
-void main() {
-    int n, tempBT[15], total_WT=0, total_TAT=0, quantum;
-    float avg_WT=0, avg_TAT=0;
-    printf("\nEnter the number of processes:\n");
-    scanf("%d", &n);
-    printf("\nEnter the arrival time and burst time of the process:\n");
-    printf("AT BT\n");
-    for(int i=0; i<n; i++) {
-        p[i].Id = (i+1);
-        scanf("%d%d", &p[i].AT, &p[i].BT);
-        tempBT[i] = p[i].BT;
-        p[i].flag = 0;
+int f = 0, r = -1, totaltat=0, totalwt=0, q[100];
+
+void main()
+{
+    printf("Enter the Number of Process and Time Quantum: ");
+    int n, tq, completed = 0;
+    scanf("%d%d", &n, &tq);
+
+    process *p = (process *)calloc(n, sizeof(process));
+
+    printf("Enter the Arrival Time and Burst Time\n");
+    for (int i = 0; i < n; i++)
+    {
+        p[i].pid = i + 1;
+        printf("Process P%d------>", i + 1);
+        scanf("%d%d", &p[i].at, &p[i].bt);
+        p[i].completed = 0;
+        p[i].visited = 0;
+        p[i].btr = p[i].bt;
     }
-    printf("\nEnter the time quantum:\n");
-    scanf("%d", &quantum);
-    sort(n);
 
-    //A queue is required for demonstrating this algorithm
-    int completed = 0, curIndex, curTime = p[0].AT, *waitQueue, front = 0, rear = 0, cnt=0;
-    waitQueue = (int *)malloc(n*sizeof(int));
-    cnt++;
-    waitQueue[rear] = 0;
-    p[0].flag = 1;
+    sort(p, n);
+    q[++r] = 0;
+    p[0].visited = 1;
+    int curtime = p[0].at;
 
-    while (completed != n) {
-        curIndex = waitQueue[front];
-        front = (front+1) % n;
-        if(p[curIndex].BT > quantum) {
-            p[curIndex].BT -= quantum;
-            curTime += quantum;
-            printf("| P%d(%d) %d", p[curIndex].Id, quantum, curTime);
-        } else {
-            curTime += p[curIndex].BT;
-            printf("| P%d(%d) %d", p[curIndex].Id, p[curIndex].BT, curTime);
-            p[curIndex].BT = 0;
+    while (completed != n)
+    {
+        int id = q[f++];
+        if (p[id].btr > tq)
+        {
+            p[id].btr -= tq;
+            curtime += tq;
+            printf("|P%d %d", p[id].pid, curtime);
         }
-        p[curIndex].CT = curTime;
-        cnt--;
+        else
+        {
+            curtime += p[id].btr;
+            printf("|P%d %d", p[id].pid, curtime);
 
-        for(int i=0; i<n && p[i].AT <= curTime; i++) {
-            if(i == curIndex || p[i].flag == 1 || p[i].BT == 0) 
-                continue;
-            rear = (rear+1) % n;
-            p[i].flag = 1;
-            waitQueue[rear] = i;
-            cnt++;
-        }
-
-        if(p[curIndex].BT > 0) {
-            rear = (rear+1)%n;
-            waitQueue[rear] = curIndex;
-            cnt++;
-        } else {
+            p[id].ct = curtime;
+            p[id].tat = p[id].ct - p[id].at;
+            p[id].wt = p[id].tat - p[id].bt;
             completed++;
+            p[id].btr = 0;
+            totaltat += p[id].tat;
+            totalwt += p[id].wt;
         }
 
-    }
-    for(int i=0; i<n; i++) {
-        p[i].TAT = p[i].CT - p[i].AT;
-        total_TAT += p[i].TAT;
-        p[i].WT = p[i].TAT - tempBT[p[i].Id-1];
-        total_WT += p[i].WT;
-    }
-    avg_TAT = (float)total_TAT/n;
-    avg_WT = (float)total_WT/n;
+        for (int i = 1; i < n; i++)
+        {
+            if (p[i].at <= curtime && !p[i].visited)
+            {
+                q[++r] = i;
+                p[i].visited = 1;
+            }
+        }
 
-    //Printing the table of processes with details
-    printf("\nPID\tAT\tBT\tCT\tTAT\tWT\n");
-    for(int i=0; i<n; i++) {
-        printf("%d\t%d\t%d\t%d\t%d\t%d\n", p[i].Id, p[i].AT, tempBT[i], p[i].CT, p[i].TAT, p[i].WT);
+        if (p[id].btr > 0)
+        {
+            q[++r] = id;
+        }
+
+        while (f > r && completed < n)
+        {
+            curtime++;
+            printf("|IDLE %d", curtime);
+
+            for (int i = 1; i < n; i++)
+            {
+                if (p[i].at <= curtime && !p[i].visited)
+                {
+                    q[++r] = i;
+                    p[i].visited = 1;
+                }
+            }
+        }
     }
 
-    printf("\nAverage TAT = %.2f\nAverage WT = %.2f\n", avg_TAT, avg_WT);
+    printf("\n\nPID\tAT\tBT\tCT\tTAT\tWT\n");
+    for (int i = 0; i < n; i++)
+    {
+        printf("%d\t%d\t%d\t%d\t%d\t%d\n", p[i].pid, p[i].at, p[i].bt, p[i].ct, p[i].tat, p[i].wt);
+    }
+
+    float avgtat, avgwt;
+    avgtat = (float)totaltat / n;
+    avgwt = (float)totalwt / n;
+
+    printf("\nAverage TAT = %f\nAverage WT = %f\n", avgtat, avgwt);
 }
