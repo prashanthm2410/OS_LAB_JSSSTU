@@ -41,7 +41,7 @@ void main()
             curtime+=p[minindex].bt;
             p[minindex].ct=curtime;
             p[minindex].tat=p[minindex].ct-p[minindex].at;
-            p[minindex].wt=p[minindex].tat-p[minindex].ct;
+            p[minindex].wt=p[minindex].tat-p[minindex].bt;
             p[minindex].iscompl=1;
             totaltat+=p[minindex].tat;
             totalwt+=p[minindex].wt;
@@ -55,7 +55,7 @@ void main()
     float avg_WT = (float)totalwt/n;
     printf("\nPID\tAT\tBT\tCT\tTAT\tWT\t\n");
     for(int i=0; i<n; i++) {
-        printf("%d\t%d\t%d\t%d\t%d\t%d\t%d\n", p[i].id, p[i].at, p[i].bt, p[i].ct, p[i].tat, p[i].wt);
+        printf("%d\t%d\t%d\t%d\t%d\t%d\n", p[i].id, p[i].at, p[i].bt, p[i].ct, p[i].tat, p[i].wt);
     }
     printf("\nAverage TAT = %.2f\nAverage WT = %.2f\n", avg_TAT, avg_WT);
 
