@@ -16,8 +16,6 @@ void main(int argc,char *argv[])
 	{
 	fgets(temp,100,fp);
 	if(strstr(temp,pat))
-	printf("Pattern Matched");
-	else
-	printf("Pattern NOT Matched");
+	printf("%s",temp);
 	}
 }
