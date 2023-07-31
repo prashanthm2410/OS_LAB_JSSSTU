@@ -10,7 +10,7 @@ void main(int argc,char *argv[])
 	}
 	char ch;
 	printf("Enter the Pattern to Be searched  : ");
-	char pat[150],temp[150];scanf("%s",pat);
+	char pat[15],temp[150];scanf("%s",pat);
 	FILE *fp = fopen(argv[1],"r");
 	while(!feof(fp))
 	{
