@@ -35,7 +35,7 @@ shmdt(sharedmemory);
 void main(int argc,char *argv[])
 {
 	int shmid, n=atoi(argv[1]);
-	int *sharedmemory;char buffer[2];
+	int *sharedmemory;char buffer[n];
 	shmid=shmget((key_t)110011, 1024, 0666);
 	sharedmemory = (int *)shmat(shmid,NULL,0);
 	buffer[0]=0;buffer[1]=1;
