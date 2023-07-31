@@ -1,13 +1,10 @@
 #include<stdio.h>
 #include<stdlib.h>
-
 struct process
 {
     int pid, at, bt, ct, wt, tat, completed, btr, visited;
 };
-
 typedef struct process process;
-
 void sort(process *p, int n)
 {
     process temp;
@@ -24,9 +21,7 @@ void sort(process *p, int n)
         }
     }
 }
-
 int f = 0, r = -1, totaltat=0, totalwt=0, q[100];
-
 void main()
 {
     printf("Enter the Number of Process and Time Quantum: ");
