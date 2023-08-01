@@ -28,7 +28,7 @@ int main()
         parentpid=getppid();
         printf("[PARENT] My ID is %d\n ",mypid);
         printf("[PARENT] My Parent ID is %d\n ",parentpid);
-        printf("[Parent] Sleeping For 10 Seconds")
+        printf("[Parent] Sleeping For 10 Seconds");
         sleep(10);
         printf("[PARENT] Child_Pid = %d has Ended  but has Entery in tjhe process Table So Orphan",childpid);
     }
