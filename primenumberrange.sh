@@ -1,5 +1,6 @@
 #!/bin/bash 
-  
+  //chmod +x program.sh
+  // ./program.sh
  echo "Enter the Numbers for The Range: " 
  read m 
  read n
